@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uday Shrestha - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .typing {
+            overflow: hidden;
+            border-right: .15em solid #4F46E5;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #4F46E5; }
+        }
+        .skill-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4F46E5, #7C3AED);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50" x-data="portfolio()">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-gray-800">Uday</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" @click="scrollTo('home')" class="text-gray-700 hover:text-indigo-600 transition-colors">Home</a>
+                    <a href="#about" @click="scrollTo('about')" class="text-gray-700 hover:text-indigo-600 transition-colors">About</a>
+                    <a href="#education" @click="scrollTo('education')" class="text-gray-700 hover:text-indigo-600 transition-colors">Education</a>
+                    <a href="#skills" @click="scrollTo('skills')" class="text-gray-700 hover:text-indigo-600 transition-colors">Skills</a>
+                    <a href="#projects" @click="scrollTo('projects')" class="text-gray-700 hover:text-indigo-600 transition-colors">Projects</a>
+                    <a href="#contact" @click="scrollTo('contact')" class="text-gray-700 hover:text-indigo-600 transition-colors">Contact</a>
+                </div>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden">
+                    <i class="fas fa-bars text-gray-700"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4">
+                <a href="#home" @click="scrollTo('home'); mobileMenu = false" class="block py-2 text-gray-700">Home</a>
+                <a href="#about" @click="scrollTo('about'); mobileMenu = false" class="block py-2 text-gray-700">About</a>
+                <a href="#education" @click="scrollTo('education'); mobileMenu = false" class="block py-2 text-gray-700">Education</a>
+                <a href="#skills" @click="scrollTo('skills'); mobileMenu = false" class="block py-2 text-gray-700">Skills</a>
+                <a href="#projects" @click="scrollTo('projects'); mobileMenu = false" class="block py-2 text-gray-700">Projects</a>
+                <a href="#contact" @click="scrollTo('contact'); mobileMenu = false" class="block py-2 text-gray-700">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen gradient-bg flex items-center justify-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="animate-pulse mb-8">
+                <div class="w-32 h-32 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-8">
+                    <i class="fas fa-user text-6xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4">Hello, I'm Uday</h1>
+            <div class="text-xl md:text-2xl mb-8 h-8">
+                <span class="typing">Computer Science Student & Developer</span>
+            </div>
+            <p class="text-lg md:text-xl mb-12 max-w-2xl mx-auto opacity-90">
+                An enthusiastic and inquisitive student with a passion for learning and innovation in technology
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button @click="scrollTo('projects')" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                    View My Work
+                </button>
+                <button @click="scrollTo('contact')" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
+                    Get In Touch
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-white text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">About Me</h2>
+                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="bg-gradient-to-br from-indigo-100 to-purple-100 p-8 rounded-2xl">
+                            <i class="fas fa-code text-6xl text-indigo-600 mb-6"></i>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Passionate Developer</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Currently pursuing B.Sc.CSIT with consistent academic performance and a strong foundation in programming logic and mathematical concepts.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-gray-800">Quick Facts</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt text-indigo-600 w-6"></i>
+                                <span class="text-gray-700 ml-3">Lokanthali-1, Bhaktapur, Nepal</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-graduation-cap text-indigo-600 w-6"></i>
+                                <span class="text-gray-700 ml-3">B.Sc.CSIT Student</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-heart text-indigo-600 w-6"></i>
+                                <span class="text-gray-700 ml-3">Passionate about learning & innovation</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-rocket text-indigo-600 w-6"></i>
+                                <span class="text-gray-700 ml-3">Quick learner & team player</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Education</h2>
+                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-8">
+                    <!-- Current Education -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">B.Sc.CSIT</h3>
+                                <p class="text-indigo-600 font-semibold">Samriddhi College, Lokanthali</p>
+                            </div>
+                            <div class="text-gray-600 font-medium">November 2019 – Ongoing</div>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                            <template x-for="sem in semesters" :key="sem.name">
+                                <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-sm text-gray-600" x-text="sem.name"></div>
+                                    <div class="text-lg font-bold text-indigo-600" x-text="sem.grade"></div>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="text-gray-700">
+                            <strong>Average:</strong> <span class="text-indigo-600 font-semibold">77.7%</span>
+                        </div>
+                    </div>
+
+                    <!-- +2 Education -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">+2 Science</h3>
+                                <p class="text-indigo-600 font-semibold">DAV College, Jawalakhel</p>
+                            </div>
+                            <div class="text-gray-600 font-medium">July 2016 – April 2018</div>
+                        </div>
+                        <div class="text-gray-700">
+                            <strong>CGPA:</strong> <span class="text-indigo-600 font-semibold">3.39</span>
+                        </div>
+                    </div>
+
+                    <!-- Grade 10 -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">Grade 10</h3>
+                                <p class="text-indigo-600 font-semibold">Gaurishankar English Boarding School</p>
+                            </div>
+                            <div class="text-gray-600 font-medium">June 2016</div>
+                        </div>
+                        <div class="text-gray-700">
+                            <strong>CGPA:</strong> <span class="text-indigo-600 font-semibold">3.60</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Skills & Technologies</h2>
+                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
+            </div>
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Programming Languages -->
+                    <div class="bg-gray-50 rounded-xl p-8">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-code text-4xl text-indigo-600 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Programming Languages</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <template x-for="skill in programmingSkills" :key="skill.name">
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-medium text-gray-700" x-text="skill.name"></span>
+                                        <span class="text-indigo-600 font-semibold" x-text="skill.level + '%'"></span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" :style="'width: ' + skill.level + '%'"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Technologies & Tools -->
+                    <div class="bg-gray-50 rounded-xl p-8">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-tools text-4xl text-indigo-600 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Technologies & Tools</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="tech in technologies" :key="tech">
+                                <div class="flex items-center p-3 bg-white rounded-lg">
+                                    <i class="fas fa-check-circle text-indigo-600 mr-3"></i>
+                                    <span class="text-gray-700" x-text="tech"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Operating Systems -->
+                    <div class="bg-gray-50 rounded-xl p-8">
+                        <div class="text-center mb-6">
+                            <i class="fas fa-desktop text-4xl text-indigo-600 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800">Operating Systems</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="os in operatingSystems" :key="os">
+                                <div class="flex items-center p-3 bg-white rounded-lg">
+                                    <i class="fab fa-linux text-indigo-600 mr-3"></i>
+                                    <span class="text-gray-700" x-text="os"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">My Projects</h2>
+                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
+            </div>
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <template x-for="project in projects" :key="project.title">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center mb-4">
+                                    <i :class="project.icon" class="text-3xl text-indigo-600 mr-4"></i>
+                                    <h3 class="text-xl font-bold text-gray-800" x-text="project.title"></h3>
+                                </div>
+                                <p class="text-gray-600 mb-4" x-text="project.description"></p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <template x-for="tech in project.technologies" :key="tech">
+                                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full" x-text="tech"></span>
+                                    </template>
+                                </div>
+                                <div class="flex gap-3">
+                                    <template x-if="project.github">
+                                        <a :href="project.github" target="_blank" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors">
+                                            <i class="fab fa-github mr-2"></i>
+                                            <span>View Code</span>
+                                        </a>
+                                    </template>
+                                    <template x-if="project.demo">
+                                        <a :href="project.demo" target="_blank" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors">
+                                            <i class="fas fa-external-link-alt mr-2"></i>
+                                            <span>Live Demo</span>
+                                        </a>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
+                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
+                <p class="text-gray-600 mt-6 max-w-2xl mx-auto">
+                    I'm always interested in new opportunities and collaborations. Feel free to reach out!
+                </p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-8">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-envelope text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800">Email</div>
+                                    <a href="mailto:udshrestha48@gmail.com" class="text-indigo-600 hover:text-indigo-800">udshrestha48@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-phone text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800">Phone</div>
+                                    <a href="tel:+9779847527022" class="text-indigo-600 hover:text-indigo-800">(+977) 984-752-7022</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-map-marker-alt text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800">Location</div>
+                                    <div class="text-gray-600">Lokanthali-1, Bhaktapur, Nepal</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fab fa-github text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800">GitHub</div>
+                                    <a href="https://github.com/UD-sht" target="_blank" class="text-indigo-600 hover:text-indigo-800">UD-sht</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <form @submit.prevent="submitForm" class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Name</label>
+                                <input x-model="form.name" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Email</label>
+                                <input x-model="form.email" type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Message</label>
+                                <textarea x-model="form.message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold mb-4">Uday Shrestha</h3>
+                <p class="text-gray-400 max-w-md mx-auto">
+                    Computer Science Student passionate about creating innovative solutions and learning new technologies.
+                </p>
+            </div>
+            <div class="border-t border-gray-700 pt-8">
+                <p class="text-gray-400">
+                    &copy; 2025 Uday Shrestha. Built with Alpine.js and Tailwind CSS.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function portfolio() {
+            return {
+                mobileMenu: false,
+                form: {
+                    name: '',
+                    email: '',
+                    message: ''
+                },
+                semesters: [
+                    { name: '1st Sem', grade: '77.2%' },
+                    { name: '2nd Sem', grade: '78%' },
+                    { name: '3rd Sem', grade: '80%' },
+                    { name: '4th Sem', grade: '76.4%' },
+                    { name: '5th Sem', grade: '83.6%' },
+                    { name: '6th Sem', grade: '71%' }
+                ],
+                programmingSkills: [
+                    { name: 'C/C++', level: 85 },
+                    { name: 'Python', level: 80 },
+                    { name: 'HTML/CSS', level: 90 },
+                    { name: 'JavaScript', level: 75 },
+                    { name: 'PHP', level: 70 },
+                    { name: 'React.js', level: 65 },
+                    { name: 'SQL', level: 75 }
+                ],
+                technologies: [
+                    'Google Colab',
+                    'Jupyter Notebooks',
+                    'NumPy',
+                    'Pandas',
+                    'Scikit-Learn',
+                    'Git & GitHub',
+                    'VS Code'
+                ],
+                operatingSystems: [
+                    'Windows',
+                    'Ubuntu',
+                    'Debian'
+                ],
+                projects: [
+                    {
+                        title: 'Online Ticket Booking System',
+                        description: 'A console-based ticket booking system developed in C with features for seat selection, booking management, and payment processing.',
+                        technologies: ['C', 'Data Structures'],
+                        icon: 'fas fa-ticket-alt',
+                        github: null,
+                        demo: null
+                    },
+                    {
+                        title: 'Flappy Bird Clone',
+                        description: 'A recreation of the popular Flappy Bird game using C++ with graphics libraries, featuring collision detection and scoring system.',
+                        technologies: ['C++', 'Graphics', 'Game Development'],
+                        icon: 'fas fa-gamepad',
+                        github: null,
+                        demo: null
+                    },
+                    {
+                        title: 'E-Commerce Website',
+                        description: 'A full-featured e-commerce platform with user authentication, product catalog, shopping cart, and payment integration.',
+                        technologies: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+                        icon: 'fas fa-shopping-cart',
+                        github: 'https://github.com/UD-sht/E-commerce.git',
+                        demo: null
+                    },
+                    {
+                        title: 'Online Banking System',
+                        description: 'A secure web-based banking application with account management, transaction processing, and user authentication features.',
+                        technologies: ['PHP', 'HTML', 'CSS', 'JavaScript', 'MySQL'],
+                        icon: 'fas fa-university',
+                        github: 'https://github.com/UD-sht/Online_Banking_System.git',
+                        demo: null
+                    }
+                ],
+                scrollTo(elementId) {
+                    document.getElementById(elementId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                },
+                submitForm() {
+                    // Here you would typically send the form data to a server
+                    alert('Thank you for your message! I\'ll get back to you soon.');
+                    this.form = { name: '', email: '', message: '' };
+                }
+            }
+        }
+    </script>
+</body>
+</html>
