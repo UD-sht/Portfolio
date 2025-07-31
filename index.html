@@ -3,148 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uday Shrestha - Portfolio</title>
+    <title>Uday Shrestha - Web Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .typing {
-            overflow: hidden;
-            border-right: .15em solid #4F46E5;
-            white-space: nowrap;
-            margin: 0 auto;
-            letter-spacing: .15em;
-            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-        }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #4F46E5; }
-        }
-        .skill-bar {
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .skill-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #4F46E5, #7C3AED);
-            border-radius: 4px;
-            transition: width 2s ease-in-out;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .scroll-smooth { scroll-behavior: smooth; }
     </style>
 </head>
-<body class="bg-gray-50" x-data="portfolio()">
+<body class="bg-gray-50 text-gray-800" x-data="portfolio()">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300" :class="scrolled ? 'bg-white shadow-lg' : 'bg-transparent'">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold text-gray-800">Uday</div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#home" @click="scrollTo('home')" class="text-gray-700 hover:text-indigo-600 transition-colors">Home</a>
-                    <a href="#about" @click="scrollTo('about')" class="text-gray-700 hover:text-indigo-600 transition-colors">About</a>
-                    <a href="#education" @click="scrollTo('education')" class="text-gray-700 hover:text-indigo-600 transition-colors">Education</a>
-                    <a href="#skills" @click="scrollTo('skills')" class="text-gray-700 hover:text-indigo-600 transition-colors">Skills</a>
-                    <a href="#projects" @click="scrollTo('projects')" class="text-gray-700 hover:text-indigo-600 transition-colors">Projects</a>
-                    <a href="#contact" @click="scrollTo('contact')" class="text-gray-700 hover:text-indigo-600 transition-colors">Contact</a>
+                <div class="text-2xl font-bold" :class="scrolled ? 'text-gray-800' : 'text-white'">
+                    Uday Shrestha
                 </div>
-                <button @click="mobileMenu = !mobileMenu" class="md:hidden">
-                    <i class="fas fa-bars text-gray-700"></i>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Home</a>
+                    <a href="#about" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">About</a>
+                    <a href="#experience" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Experience</a>
+                    <a href="#projects" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Projects</a>
+                    <a href="#contact" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Contact</a>
+                </div>
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden" :class="scrolled ? 'text-gray-800' : 'text-white'">
+                    <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
-            <!-- Mobile Menu -->
-            <div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4">
-                <a href="#home" @click="scrollTo('home'); mobileMenu = false" class="block py-2 text-gray-700">Home</a>
-                <a href="#about" @click="scrollTo('about'); mobileMenu = false" class="block py-2 text-gray-700">About</a>
-                <a href="#education" @click="scrollTo('education'); mobileMenu = false" class="block py-2 text-gray-700">Education</a>
-                <a href="#skills" @click="scrollTo('skills'); mobileMenu = false" class="block py-2 text-gray-700">Skills</a>
-                <a href="#projects" @click="scrollTo('projects'); mobileMenu = false" class="block py-2 text-gray-700">Projects</a>
-                <a href="#contact" @click="scrollTo('contact'); mobileMenu = false" class="block py-2 text-gray-700">Contact</a>
+        </div>
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white shadow-lg">
+            <div class="px-6 py-4 space-y-4">
+                <a href="#home" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Home</a>
+                <a href="#about" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">About</a>
+                <a href="#experience" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Experience</a>
+                <a href="#projects" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Projects</a>
+                <a href="#contact" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="min-h-screen gradient-bg flex items-center justify-center text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-black/20"></div>
+    <section id="home" class="min-h-screen gradient-bg flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="animate-pulse mb-8">
-                <div class="w-32 h-32 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-8">
-                    <i class="fas fa-user text-6xl text-white"></i>
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8" x-show="true" x-transition.delay.200ms>
+                    <img src="https://via.placeholder.com/200x200/4f46e5/ffffff?text=US" alt="Uday Shrestha" class="w-32 h-32 rounded-full mx-auto mb-8 border-4 border-white shadow-xl">
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6" x-show="true" x-transition.delay.400ms>
+                    Uday Shrestha
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-8" x-show="true" x-transition.delay.600ms>
+                    Web Developer | Laravel Specialist | Problem Solver
+                </p>
+                <p class="text-lg text-blue-50 mb-12 max-w-2xl mx-auto" x-show="true" x-transition.delay.800ms>
+                    Passionate computer science graduate with expertise in Laravel, PHP, and full-stack development. 
+                    Currently working as a Junior Developer at DryIce Solutions, building robust financial management systems.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center" x-show="true" x-transition.delay.1000ms>
+                    <button @click="downloadCV()" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-download mr-2"></i>Download CV
+                    </button>
+                    <a href="#contact" class="glass-effect text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                        Get In Touch
+                    </a>
                 </div>
             </div>
-            <h1 class="text-5xl md:text-7xl font-bold mb-4">Hello, I'm Uday</h1>
-            <div class="text-xl md:text-2xl mb-8 h-8">
-                <span class="typing">Computer Science Student & Developer</span>
-            </div>
-            <p class="text-lg md:text-xl mb-12 max-w-2xl mx-auto opacity-90">
-                An enthusiastic and inquisitive student with a passion for learning and innovation in technology
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button @click="scrollTo('projects')" class="bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
-                    View My Work
-                </button>
-                <button @click="scrollTo('contact')" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
-                    Get In Touch
-                </button>
-            </div>
         </div>
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i class="fas fa-chevron-down text-white text-2xl"></i>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <i class="fas fa-chevron-down text-2xl"></i>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="py-20 bg-white">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">About Me</h2>
-                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
-            </div>
             <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">About Me</h2>
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div>
-                        <div class="bg-gradient-to-br from-indigo-100 to-purple-100 p-8 rounded-2xl">
-                            <i class="fas fa-code text-6xl text-indigo-600 mb-6"></i>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Passionate Developer</h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                Currently pursuing B.Sc.CSIT with consistent academic performance and a strong foundation in programming logic and mathematical concepts.
-                            </p>
+                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Profile</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            A passionate and inquisitive computer science graduate, full of energy and a strong desire for continuous learning. 
+                            Equipped with a solid foundation in mathematics, science, and programming logic.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed mb-8">
+                            Eager to apply and enhance skills in teamwork, effective communication, and innovative problem-solving. 
+                            A quick learner with a growth mindset, always striving to improve and broaden technical and professional abilities.
+                        </p>
+                        <div class="flex items-center space-x-4 text-gray-600">
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>
+                                <span>Bhaktapur, Nepal</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-flag mr-2 text-blue-600"></i>
+                                <span>Nepalese</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="space-y-6">
-                        <h3 class="text-2xl font-bold text-gray-800">Quick Facts</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-map-marker-alt text-indigo-600 w-6"></i>
-                                <span class="text-gray-700 ml-3">Lokanthali-1, Bhaktapur, Nepal</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-graduation-cap text-indigo-600 w-6"></i>
-                                <span class="text-gray-700 ml-3">B.Sc.CSIT Student</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-heart text-indigo-600 w-6"></i>
-                                <span class="text-gray-700 ml-3">Passionate about learning & innovation</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-rocket text-indigo-600 w-6"></i>
-                                <span class="text-gray-700 ml-3">Quick learner & team player</span>
-                            </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Skills</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <template x-for="skill in skills" :key="skill.name">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="flex items-center mb-2">
+                                        <i :class="skill.icon" class="text-blue-600 mr-2"></i>
+                                        <span class="font-medium" x-text="skill.name"></span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-600 h-2 rounded-full transition-all duration-1000" :style="`width: ${skill.level}%`"></div>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -153,129 +129,56 @@
     </section>
 
     <!-- Education Section -->
-    <section id="education" class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Education</h2>
-                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
-            </div>
             <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Education</h2>
                 <div class="space-y-8">
-                    <!-- Current Education -->
-                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">B.Sc.CSIT</h3>
-                                <p class="text-indigo-600 font-semibold">Samriddhi College, Lokanthali</p>
-                            </div>
-                            <div class="text-gray-600 font-medium">November 2019 – Ongoing</div>
-                        </div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                            <template x-for="sem in semesters" :key="sem.name">
-                                <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                    <div class="text-sm text-gray-600" x-text="sem.name"></div>
-                                    <div class="text-lg font-bold text-indigo-600" x-text="sem.grade"></div>
+                    <template x-for="edu in education" :key="edu.degree">
+                        <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800" x-text="edu.degree"></h3>
+                                    <p class="text-blue-600 font-medium" x-text="edu.institution"></p>
                                 </div>
-                            </template>
-                        </div>
-                        <div class="text-gray-700">
-                            <strong>Average:</strong> <span class="text-indigo-600 font-semibold">77.7%</span>
-                        </div>
-                    </div>
-
-                    <!-- +2 Education -->
-                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">+2 Science</h3>
-                                <p class="text-indigo-600 font-semibold">DAV College, Jawalakhel</p>
+                                <div class="text-right">
+                                    <p class="text-gray-600" x-text="edu.period"></p>
+                                    <p class="text-gray-800 font-semibold" x-text="edu.grade"></p>
+                                </div>
                             </div>
-                            <div class="text-gray-600 font-medium">July 2016 – April 2018</div>
+                            <p class="text-gray-600" x-text="edu.location"></p>
                         </div>
-                        <div class="text-gray-700">
-                            <strong>CGPA:</strong> <span class="text-indigo-600 font-semibold">3.39</span>
-                        </div>
-                    </div>
-
-                    <!-- Grade 10 -->
-                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">Grade 10</h3>
-                                <p class="text-indigo-600 font-semibold">Gaurishankar English Boarding School</p>
-                            </div>
-                            <div class="text-gray-600 font-medium">June 2016</div>
-                        </div>
-                        <div class="text-gray-700">
-                            <strong>CGPA:</strong> <span class="text-indigo-600 font-semibold">3.60</span>
-                        </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 bg-white">
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 bg-white">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Skills & Technologies</h2>
-                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
-            </div>
             <div class="max-w-6xl mx-auto">
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Programming Languages -->
-                    <div class="bg-gray-50 rounded-xl p-8">
-                        <div class="text-center mb-6">
-                            <i class="fas fa-code text-4xl text-indigo-600 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Programming Languages</h3>
-                        </div>
-                        <div class="space-y-4">
-                            <template x-for="skill in programmingSkills" :key="skill.name">
-                                <div>
-                                    <div class="flex justify-between mb-2">
-                                        <span class="font-medium text-gray-700" x-text="skill.name"></span>
-                                        <span class="text-indigo-600 font-semibold" x-text="skill.level + '%'"></span>
-                                    </div>
-                                    <div class="skill-bar">
-                                        <div class="skill-progress" :style="'width: ' + skill.level + '%'"></div>
-                                    </div>
+                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Professional Experience</h2>
+                <div class="space-y-8">
+                    <template x-for="exp in experience" :key="exp.position">
+                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
+                            <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-semibold text-gray-800" x-text="exp.position"></h3>
+                                    <p class="text-blue-600 font-medium text-lg" x-text="exp.company"></p>
+                                    <p class="text-gray-600" x-text="exp.location"></p>
                                 </div>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- Technologies & Tools -->
-                    <div class="bg-gray-50 rounded-xl p-8">
-                        <div class="text-center mb-6">
-                            <i class="fas fa-tools text-4xl text-indigo-600 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Technologies & Tools</h3>
-                        </div>
-                        <div class="space-y-3">
-                            <template x-for="tech in technologies" :key="tech">
-                                <div class="flex items-center p-3 bg-white rounded-lg">
-                                    <i class="fas fa-check-circle text-indigo-600 mr-3"></i>
-                                    <span class="text-gray-700" x-text="tech"></span>
+                                <div class="text-right mt-2 md:mt-0">
+                                    <p class="text-gray-600 font-medium" x-text="exp.period"></p>
                                 </div>
-                            </template>
+                            </div>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <template x-for="responsibility in exp.responsibilities">
+                                    <li x-text="responsibility"></li>
+                                </template>
+                            </ul>
                         </div>
-                    </div>
-
-                    <!-- Operating Systems -->
-                    <div class="bg-gray-50 rounded-xl p-8">
-                        <div class="text-center mb-6">
-                            <i class="fas fa-desktop text-4xl text-indigo-600 mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-800">Operating Systems</h3>
-                        </div>
-                        <div class="space-y-3">
-                            <template x-for="os in operatingSystems" :key="os">
-                                <div class="flex items-center p-3 bg-white rounded-lg">
-                                    <i class="fab fa-linux text-indigo-600 mr-3"></i>
-                                    <span class="text-gray-700" x-text="os"></span>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -284,37 +187,24 @@
     <!-- Projects Section -->
     <section id="projects" class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">My Projects</h2>
-                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
-            </div>
             <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Projects</h2>
                 <div class="grid md:grid-cols-2 gap-8">
                     <template x-for="project in projects" :key="project.title">
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                             <div class="p-6">
-                                <div class="flex items-center mb-4">
-                                    <i :class="project.icon" class="text-3xl text-indigo-600 mr-4"></i>
-                                    <h3 class="text-xl font-bold text-gray-800" x-text="project.title"></h3>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-800" x-text="project.title"></h3>
+                                    <span class="text-sm text-gray-500" x-text="project.period"></span>
                                 </div>
-                                <p class="text-gray-600 mb-4" x-text="project.description"></p>
-                                <div class="flex flex-wrap gap-2 mb-4">
-                                    <template x-for="tech in project.technologies" :key="tech">
-                                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full" x-text="tech"></span>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600 text-sm">
+                                    <template x-for="feature in project.features">
+                                        <li x-text="feature"></li>
                                     </template>
-                                </div>
-                                <div class="flex gap-3">
-                                    <template x-if="project.github">
-                                        <a :href="project.github" target="_blank" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors">
-                                            <i class="fab fa-github mr-2"></i>
-                                            <span>View Code</span>
-                                        </a>
-                                    </template>
-                                    <template x-if="project.demo">
-                                        <a :href="project.demo" target="_blank" class="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors">
-                                            <i class="fas fa-external-link-alt mr-2"></i>
-                                            <span>Live Demo</span>
-                                        </a>
+                                </ul>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <template x-for="tech in project.technologies">
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full" x-text="tech"></span>
                                     </template>
                                 </div>
                             </div>
@@ -328,74 +218,57 @@
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-white">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
-                <div class="w-24 h-1 bg-indigo-600 mx-auto"></div>
-                <p class="text-gray-600 mt-6 max-w-2xl mx-auto">
-                    I'm always interested in new opportunities and collaborations. Feel free to reach out!
-                </p>
-            </div>
             <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Get In Touch</h2>
                 <div class="grid md:grid-cols-2 gap-12">
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-8">Contact Information</h3>
-                        <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Contact Information</h3>
+                        <div class="space-y-4">
                             <div class="flex items-center">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-envelope text-indigo-600"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-gray-800">Email</div>
-                                    <a href="mailto:udshrestha48@gmail.com" class="text-indigo-600 hover:text-indigo-800">udshrestha48@gmail.com</a>
-                                </div>
+                                <i class="fas fa-envelope text-blue-600 mr-4 w-5"></i>
+                                <span class="text-gray-600">udshrestha48@gmail.com</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-phone text-indigo-600"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-gray-800">Phone</div>
-                                    <a href="tel:+9779847527022" class="text-indigo-600 hover:text-indigo-800">(+977) 984-752-7022</a>
-                                </div>
+                                <i class="fas fa-phone text-blue-600 mr-4 w-5"></i>
+                                <span class="text-gray-600">(+977) 984-752-7022</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-map-marker-alt text-indigo-600"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-gray-800">Location</div>
-                                    <div class="text-gray-600">Lokanthali-1, Bhaktapur, Nepal</div>
-                                </div>
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-4 w-5"></i>
+                                <span class="text-gray-600">Lokanthali-1, Bhaktapur, Bagmati Province, Nepal</span>
                             </div>
                             <div class="flex items-center">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fab fa-github text-indigo-600"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-gray-800">GitHub</div>
-                                    <a href="https://github.com/UD-sht" target="_blank" class="text-indigo-600 hover:text-indigo-800">UD-sht</a>
-                                </div>
+                                <i class="fab fa-linkedin text-blue-600 mr-4 w-5"></i>
+                                <a href="https://www.linkedin.com/in/uday-shrestha" target="_blank" class="text-blue-600 hover:text-blue-800">LinkedIn Profile</a>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <form @submit.prevent="submitForm" class="space-y-6">
+                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Send Message</h3>
+                        <form @submit.prevent="sendMessage" class="space-y-6">
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Name</label>
-                                <input x-model="form.name" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                                <input type="text" x-model="form.name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Email</label>
-                                <input x-model="form.email" type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                                <input type="email" x-model="form.email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Subject</label>
+                                <input type="text" x-model="form.subject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Message</label>
-                                <textarea x-model="form.message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required></textarea>
+                                <textarea x-model="form.message" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
-                                Send Message
+                            <button type="submit" :disabled="sending" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50">
+                                <span x-show="!sending">Send Message</span>
+                                <span x-show="sending">Sending...</span>
                             </button>
                         </form>
+                        <div x-show="messageStatus" x-transition class="mt-4 p-4 rounded-lg" :class="messageStatus === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                            <p x-text="messageText"></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -403,108 +276,249 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
+    <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6 text-center">
-            <div class="mb-8">
-                <h3 class="text-2xl font-bold mb-4">Uday Shrestha</h3>
-                <p class="text-gray-400 max-w-md mx-auto">
-                    Computer Science Student passionate about creating innovative solutions and learning new technologies.
-                </p>
-            </div>
-            <div class="border-t border-gray-700 pt-8">
-                <p class="text-gray-400">
-                    &copy; 2025 Uday Shrestha. Built with Alpine.js and Tailwind CSS.
-                </p>
-            </div>
+            <p>&copy; 2025 Uday Shrestha. All rights reserved.</p>
+            <p class="mt-2 text-gray-400">Built with Alpine.js and Tailwind CSS</p>
         </div>
     </footer>
 
     <script>
         function portfolio() {
             return {
-                mobileMenu: false,
+                scrolled: false,
+                mobileMenuOpen: false,
+                sending: false,
+                messageStatus: '',
+                messageText: '',
                 form: {
                     name: '',
                     email: '',
+                    subject: '',
                     message: ''
                 },
-                semesters: [
-                    { name: '1st Sem', grade: '77.2%' },
-                    { name: '2nd Sem', grade: '78%' },
-                    { name: '3rd Sem', grade: '80%' },
-                    { name: '4th Sem', grade: '76.4%' },
-                    { name: '5th Sem', grade: '83.6%' },
-                    { name: '6th Sem', grade: '71%' }
+                skills: [
+                    { name: 'PHP/Laravel', level: 90, icon: 'fab fa-php' },
+                    { name: 'JavaScript', level: 85, icon: 'fab fa-js' },
+                    { name: 'HTML/CSS', level: 90, icon: 'fab fa-html5' },
+                    { name: 'MySQL', level: 85, icon: 'fas fa-database' },
+                    { name: 'Python', level: 75, icon: 'fab fa-python' },
+                    { name: 'C/C++', level: 80, icon: 'fas fa-code' },
+                    { name: 'Linux', level: 70, icon: 'fab fa-linux' },
+                    { name: 'Git/GitLab', level: 85, icon: 'fab fa-git-alt' }
                 ],
-                programmingSkills: [
-                    { name: 'C/C++', level: 85 },
-                    { name: 'Python', level: 80 },
-                    { name: 'HTML/CSS', level: 90 },
-                    { name: 'JavaScript', level: 75 },
-                    { name: 'PHP', level: 70 },
-                    { name: 'React.js', level: 65 },
-                    { name: 'SQL', level: 75 }
+                education: [
+                    {
+                        degree: 'Bachelor of Science in Computer Science and Information Technology',
+                        institution: 'Samriddhi College, Lokanthali (Tribhuvan University)',
+                        period: '2019 – 2023',
+                        grade: 'Percentage: 78.48%',
+                        location: 'Bhaktapur'
+                    },
+                    {
+                        degree: '+2 Science',
+                        institution: 'DAV College, Jawalakhel (NEB)',
+                        period: '2016 – 2019',
+                        grade: 'CGPA: 3.39',
+                        location: 'Lalitpur'
+                    },
+                    {
+                        degree: 'SLC (Grade 10)',
+                        institution: 'Gaurishankar English Boarding School',
+                        period: '2016',
+                        grade: 'CGPA: 3.60',
+                        location: 'Sandhikharka'
+                    }
                 ],
-                technologies: [
-                    'Google Colab',
-                    'Jupyter Notebooks',
-                    'NumPy',
-                    'Pandas',
-                    'Scikit-Learn',
-                    'Git & GitHub',
-                    'VS Code'
-                ],
-                operatingSystems: [
-                    'Windows',
-                    'Ubuntu',
-                    'Debian'
+                experience: [
+                    {
+                        position: 'Junior Developer',
+                        company: 'DryIce Solutions Pvt. Ltd.',
+                        location: 'Lalitpur',
+                        period: '07/2025 – Present',
+                        responsibilities: [
+                            'Developed modules for budget planning, allocation, and expense tracking, ensuring accurate financial data management across multiple departments.',
+                            'Optimized complex SQL queries and used Eloquent relationships to handle large datasets and generate dynamic financial reports per office and fiscal year.',
+                            'Ensured data integrity and security through proper validation, role-based permissions, and middleware implementation in a banking environment.'
+                        ]
+                    },
+                    {
+                        position: 'Trainee',
+                        company: 'DryIce Solutions Pvt. Ltd.',
+                        location: 'Lalitpur',
+                        period: '09/2024 – 07/2025',
+                        responsibilities: [
+                            'Understood the core structure of an HRM system, including modules like employee management, leave tracking, and attendance records.',
+                            'Implemented CRUD operations, data validation, and role-based access control using Laravel and Eloquent ORM.',
+                            'Collaborated with the team using Git and GitLab for version control and followed best practices in modular coding, database design, and task tracking.'
+                        ]
+                    },
+                    {
+                        position: 'Internship',
+                        company: 'DryIce Solutions Pvt. Ltd.',
+                        location: 'Lalitpur',
+                        period: '05/2024 – 08/2024',
+                        responsibilities: [
+                            'Gained practical understanding of Laravel\'s MVC architecture, including route management, controller logic, and view rendering.',
+                            'Worked with Eloquent ORM to perform database operations and define relationships such as hasMany, belongsTo, and hasOne.',
+                            'Developed dynamic user interfaces using Blade templating engine, and implemented form handling with validation and session-based feedback.'
+                        ]
+                    }
                 ],
                 projects: [
                     {
-                        title: 'Online Ticket Booking System',
-                        description: 'A console-based ticket booking system developed in C with features for seat selection, booking management, and payment processing.',
-                        technologies: ['C', 'Data Structures'],
-                        icon: 'fas fa-ticket-alt',
-                        github: null,
-                        demo: null
+                        title: 'Budget and Expense Management System (BEMS)',
+                        period: '09/2024 – Present',
+                        features: [
+                            'Provides a secure, compliant, and feature-rich platform for managing the bank\'s finances systematically and scientifically.',
+                            'Supports ongoing updates and adapts to emerging regulations and the bank\'s internal standards.',
+                            'Enables comprehensive budgeting, forecasting, analysis, and financial reporting.',
+                            'Integrates data from multiple existing databases and applications for improved transparency.',
+                            'Offers self-service access to budget owners, enhancing user autonomy.'
+                        ],
+                        technologies: ['Laravel', 'MySQL', 'PHP', 'JavaScript', 'Bootstrap']
                     },
                     {
-                        title: 'Flappy Bird Clone',
-                        description: 'A recreation of the popular Flappy Bird game using C++ with graphics libraries, featuring collision detection and scoring system.',
-                        technologies: ['C++', 'Graphics', 'Game Development'],
-                        icon: 'fas fa-gamepad',
-                        github: null,
-                        demo: null
+                        title: 'Human Resource Management System (HRMS)',
+                        period: '05/2024 – 09/2024',
+                        features: [
+                            'Centralizes employee information, including personal details, job roles, and employment history.',
+                            'Manages attendance, leave, and shift scheduling efficiently.',
+                            'Facilitates performance tracking, appraisals, and goal setting.',
+                            'Supports recruitment processes, from job posting to candidate onboarding.',
+                            'Provides role-based access control for secure data handling.'
+                        ],
+                        technologies: ['Laravel', 'MySQL', 'PHP', 'JavaScript', 'Bootstrap']
                     },
                     {
-                        title: 'E-Commerce Website',
-                        description: 'A full-featured e-commerce platform with user authentication, product catalog, shopping cart, and payment integration.',
-                        technologies: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
-                        icon: 'fas fa-shopping-cart',
-                        github: 'https://github.com/UD-sht/E-commerce.git',
-                        demo: null
+                        title: 'E-Commerce Platform',
+                        period: '2023',
+                        features: [
+                            'Designed a responsive user interface with HTML, CSS, and JavaScript for product browsing and shopping.',
+                            'Implemented a shopping cart and checkout system with session handling in PHP.',
+                            'Developed user authentication and an admin panel for managing products and orders.',
+                            'Integrated a MySQL database for dynamic product display and secure data storage.'
+                        ],
+                        technologies: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript']
                     },
                     {
-                        title: 'Online Banking System',
-                        description: 'A secure web-based banking application with account management, transaction processing, and user authentication features.',
-                        technologies: ['PHP', 'HTML', 'CSS', 'JavaScript', 'MySQL'],
-                        icon: 'fas fa-university',
-                        github: 'https://github.com/UD-sht/Online_Banking_System.git',
-                        demo: null
+                        title: 'Sample Online Banking System',
+                        period: '2022',
+                        features: [
+                            'Designed a secure user interface for account holders to view balances, transaction history, and profile details.',
+                            'Implemented user authentication and session management using PHP for secure login/logout functionality.',
+                            'Developed features for fund transfers, account statements, and transaction tracking.',
+                            'Used MySQL for storing user data, transactions, and account details, ensuring real-time data access.'
+                        ],
+                        technologies: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript']
                     }
                 ],
-                scrollTo(elementId) {
-                    document.getElementById(elementId).scrollIntoView({
-                        behavior: 'smooth'
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 50;
+                    });
+
+                    // Smooth scrolling for anchor links
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        });
                     });
                 },
-                submitForm() {
-                    // Here you would typically send the form data to a server
-                    alert('Thank you for your message! I\'ll get back to you soon.');
-                    this.form = { name: '', email: '', message: '' };
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+
+                downloadCV() {
+                    // Create a simple text version of the CV for download
+                    const cvContent = `UDAY SHRESTHA
+Web Developer
+
+Contact Information:
+Email: udshrestha48@gmail.com
+Phone: (+977) 984-752-7022
+Address: Lokanthali-1, Bhaktapur, Bagmati Province, Nepal
+LinkedIn: www.linkedin.com/in/uday-shrestha
+Nationality: Nepalese
+
+PROFILE:
+A passionate and inquisitive computer science graduate, full of energy and a strong desire for continuous learning. Equipped with a solid foundation in mathematics, science, and programming logic. Eager to apply and enhance skills in teamwork, effective communication, and innovative problem-solving. A quick learner with a growth mindset, always striving to improve and broaden technical and professional abilities.
+
+EDUCATION:
+2019 – 2023: Bachelor of Science in Computer Science and Information Technology
+Samriddhi College, Lokanthali (Tribhuvan University) - Bhaktapur
+Percentage: 78.48%
+
+2016 – 2019: +2 Science
+DAV College, Jawalakhel (NEB) - Lalitpur
+CGPA: 3.39
+
+2016: SLC (Grade 10)
+Gaurishankar English Boarding School - Sandhikharka
+CGPA: 3.60
+
+PROFESSIONAL EXPERIENCE:
+07/2025 – Present: Junior Developer
+DryIce Solutions Pvt. Ltd. - Lalitpur
+• Developed modules for budget planning, allocation, and expense tracking
+• Optimized complex SQL queries and used Eloquent relationships
+• Ensured data integrity and security through proper validation
+
+09/2024 – 07/2025: Trainee
+DryIce Solutions Pvt. Ltd. - Lalitpur
+• Understood HRM system core structure
+• Implemented CRUD operations and role-based access control
+• Collaborated using Git and GitLab for version control
+
+05/2024 – 08/2024: Internship
+DryIce Solutions Pvt. Ltd. - Lalitpur
+• Gained practical understanding of Laravel's MVC architecture
+• Worked with Eloquent ORM for database operations
+• Developed dynamic user interfaces using Blade templating
+
+SKILLS:
+Programming Languages: C/C++, Python, PHP, JavaScript, HTML/CSS
+Frameworks: Laravel
+Databases: MySQL, PostgreSQL
+Operating Systems: Linux
+Version Control: Git, GitLab
+Other: Networking
+
+PROJECTS:
+1. Budget and Expense Management System (BEMS) - 09/2024 – Present
+2. Human Resource Management System (HRMS) - 05/2024 – 09/2024
+3. E-Commerce Platform - 2023
+4. Sample Online Banking System - 2022`;
+
+                    const blob = new Blob([cvContent], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Uday_Shrestha_CV.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+
+                sendMessage() {
+                    this.sending = true;
+                    this.messageStatus = '';
+                    
+                    // Simulate form submission (replace with actual email service)
+                    setTimeout(() => {
+                        // Create mailto link as fallback
+                        const subject = encodeURIComponent(this.form.subject);
+                        const body = encodeURIComponent(`Name: ${this.form.name}\nEmail: ${this.form.email}\n\nMessage:\n${this.form.message}`);
+                        const mailtoLink = `mailto:udshrestha48@gmail.com?subject=${subject}&body=${body}`;
+                        
+                        try {
+                            window.location.href = mailtoLink;
+                            this.messageStatus = 'success';
+                            this.messageText = 'Your default email client should open with the message. If not, please copy the information and send manually to udshrestha48@gmail.com';
+                            
+                            // Reset form
+                            this.form = {
+                                name: '',
+                                email:
