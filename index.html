@@ -38,6 +38,13 @@
         .profile-pic {
             border: 4px solid rgba(255, 255, 255, 0.2);
         }
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        .input-focus:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 <body class="bg-gray-50" x-data="{ 
@@ -106,17 +113,28 @@
         }
     ],
     async sendEmail() {
+        if (!this.formData.name || !this.formData.email || !this.formData.message) {
+            this.formStatus = 'Please fill all fields';
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email)) {
+            this.formStatus = 'Please enter a valid email address';
+            return;
+        }
+        this.formStatus = 'Sending...';
         try {
-            // Note: Actual email sending requires a backend service
-            // This is a placeholder for frontend validation
-            if (!this.formData.name || !this.formData.email || !this.formData.message) {
-                this.formStatus = 'Please fill all fields';
-                return;
+            const response = await fetch('/send-mail.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.formData)
+            });
+            const result = await response.json();
+            if (result.success) {
+                this.formStatus = 'Message sent successfully!';
+                this.formData = { name: '', email: '', message: '' };
+            } else {
+                this.formStatus = 'Error sending message. Please try again.';
             }
-            // Simulate email sending
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            this.formStatus = 'Message sent successfully!';
-            this.formData = { name: '', email: '', message: '' };
         } catch (error) {
             this.formStatus = 'Error sending message. Please try again.';
         }
@@ -399,8 +417,8 @@
             <div class="grid md:grid-cols-2 gap-8 mb-16">
                 <div>
                     <div class="grid md:grid-cols-3 gap-8 mb-8">
-                        <div class="glass-effect rounded-lg p-8">
-                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div class="glass-effect rounded-lg p-8 card-hover" x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
+                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4" :class="hover ? 'scale-110' : ''" x-transition.duration.300ms>
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
@@ -411,8 +429,8 @@
                             </a>
                         </div>
                         
-                        <div class="glass-effect rounded-lg p-8">
-                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div class="glass-effect rounded-lg p-8 card-hover" x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
+                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4" :class="hover ? 'scale-110' : ''" x-transition.duration.300ms>
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                 </svg>
@@ -423,8 +441,8 @@
                             </a>
                         </div>
                         
-                        <div class="glass-effect rounded-lg p-8">
-                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div class="glass-effect rounded-lg p-8 card-hover" x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false">
+                            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4" :class="hover ? 'scale-110' : ''" x-transition.duration.300ms>
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -446,20 +464,20 @@
                     </div>
                 </div>
                 
-                <div class="glass-effect rounded-lg p-8">
+                <div class="glass-effect rounded-lg p-8" x-data="{ showForm: true }" x-init="formStatus && setTimeout(() => formStatus = '', 3000)">
                     <h3 class="text-2xl font-bold mb-6">Send a Message</h3>
-                    <div class="space-y-4">
+                    <div class="space-y-4" x-show="showForm" x-transition.duration.500ms>
                         <input type="text" x-model="formData.name" placeholder="Your Name" 
-                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary">
+                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus">
                         <input type="email" x-model="formData.email" placeholder="Your Email" 
-                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary">
+                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus">
                         <textarea x-model="formData.message" placeholder="Your Message" rows="4"
-                                  class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                                  class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus"></textarea>
                         <button @click="sendEmail" 
-                                class="w-full bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors">
+                                class="w-full bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors transform hover:scale-105">
                             Send Message
                         </button>
-                        <p x-text="formStatus" class="text-sm" :class="formStatus.includes('Error') ? 'text-red-300' : 'text-green-300'"></p>
+                        <p x-text="formStatus" class="text-sm" :class="formStatus.includes('Error') ? 'text-red-300' : 'text-green-300'" x-transition.opacity></p>
                     </div>
                 </div>
             </div>
