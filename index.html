@@ -45,6 +45,19 @@
             transform: scale(1.02);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-50" x-data="{ 
@@ -52,6 +65,7 @@
     mobileMenuOpen: false,
     formData: { name: '', email: '', message: '' },
     formStatus: '',
+    isSending: false,
     skills: [
         { name: 'PHP (Laravel)', level: 90 },
         { name: 'JavaScript', level: 85 },
@@ -121,6 +135,7 @@
             this.formStatus = 'Please enter a valid email address';
             return;
         }
+        this.isSending = true;
         this.formStatus = 'Sending...';
         try {
             const response = await fetch('/send-mail.php', {
@@ -129,13 +144,15 @@
                 body: JSON.stringify(this.formData)
             });
             const result = await response.json();
+            this.isSending = false;
             if (result.success) {
                 this.formStatus = 'Message sent successfully!';
                 this.formData = { name: '', email: '', message: '' };
             } else {
-                this.formStatus = 'Error sending message. Please try again.';
+                this.formStatus = result.message || 'Error sending message. Please try again.';
             }
         } catch (error) {
+            this.isSending = false;
             this.formStatus = 'Error sending message. Please try again.';
         }
     }
@@ -455,7 +472,7 @@
                     
                     <div class="flex justify-center">
                         <a href="https://www.linkedin.com/in/uday-shrestha" target="_blank" 
-                           class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center">
+                           class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center transform hover:scale-105">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
                             </svg>
@@ -464,18 +481,44 @@
                     </div>
                 </div>
                 
-                <div class="glass-effect rounded-lg p-8" x-data="{ showForm: true }" x-init="formStatus && setTimeout(() => formStatus = '', 3000)">
+                <div class="glass-effect rounded-lg p-8" x-data="{ showForm: true }" x-init="formStatus && setTimeout(() => { formStatus = ''; isSending = false; }, 5000)">
                     <h3 class="text-2xl font-bold mb-6">Send a Message</h3>
                     <div class="space-y-4" x-show="showForm" x-transition.duration.500ms>
-                        <input type="text" x-model="formData.name" placeholder="Your Name" 
-                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus">
-                        <input type="email" x-model="formData.email" placeholder="Your Email" 
-                               class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus">
-                        <textarea x-model="formData.message" placeholder="Your Message" rows="4"
-                                  class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus"></textarea>
+                        <div class="relative">
+                            <input type="text" x-model="formData.name" placeholder="Your Name" 
+                                   class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus"
+                                   :class="formStatus.includes('name') ? 'border-red-300' : ''">
+                            <span class="absolute right-3 top-2 text-gray-400" x-show="formData.name" @click="formData.name = ''">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="relative">
+                            <input type="email" x-model="formData.email" placeholder="Your Email" 
+                                   class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus"
+                                   :class="formStatus.includes('email') ? 'border-red-300' : ''">
+                            <span class="absolute right-3 top-2 text-gray-400" x-show="formData.email" @click="formData.email = ''">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="relative">
+                            <textarea x-model="formData.message" placeholder="Your Message" rows="4"
+                                      class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-primary input-focus"
+                                      :class="formStatus.includes('message') ? 'border-red-300' : ''"></textarea>
+                            <span class="absolute right-3 top-2 text-gray-400" x-show="formData.message" @click="formData.message = ''">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+                        </div>
                         <button @click="sendEmail" 
-                                class="w-full bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors transform hover:scale-105">
-                            Send Message
+                                class="w-full bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-secondary transition-colors transform hover:scale-105 flex items-center justify-center"
+                                :disabled="isSending">
+                            <span x-show="!isSending">Send Message</span>
+                            <span x-show="isSending" class="spinner"></span>
                         </button>
                         <p x-text="formStatus" class="text-sm" :class="formStatus.includes('Error') ? 'text-red-300' : 'text-green-300'" x-transition.opacity></p>
                     </div>
