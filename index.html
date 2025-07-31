@@ -5,520 +5,463 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uday Shrestha - Web Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        accent: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .scroll-smooth { scroll-behavior: smooth; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800" x-data="portfolio()">
+<body class="bg-gray-50" x-data="{ 
+    activeSection: 'home',
+    mobileMenuOpen: false,
+    skills: [
+        { name: 'PHP (Laravel)', level: 90 },
+        { name: 'JavaScript', level: 85 },
+        { name: 'HTML/CSS', level: 95 },
+        { name: 'MySQL/PostgreSQL', level: 85 },
+        { name: 'Python', level: 80 },
+        { name: 'C/C++', level: 75 },
+        { name: 'Linux', level: 80 },
+        { name: 'Networking', level: 70 }
+    ],
+    projects: [
+        {
+            title: 'Budget and Expense Management System (BEMS)',
+            period: '09/2024 – Present',
+            description: 'A comprehensive financial management platform for banking institutions with advanced budgeting, forecasting, and reporting capabilities.',
+            features: [
+                'Secure financial data management across departments',
+                'Integration with multiple databases',
+                'Self-service access for budget owners',
+                'Compliance with banking regulations'
+            ],
+            tech: ['Laravel', 'MySQL', 'PHP', 'JavaScript']
+        },
+        {
+            title: 'Human Resource Management System (HRMS)',
+            period: '05/2024 – 09/2024',
+            description: 'Complete HR solution centralizing employee management, attendance tracking, and performance evaluation.',
+            features: [
+                'Employee information management',
+                'Attendance and leave tracking',
+                'Performance appraisals and goal setting',
+                'Recruitment process management'
+            ],
+            tech: ['Laravel', 'MySQL', 'Blade', 'PHP']
+        },
+        {
+            title: 'E-Commerce Platform',
+            period: '2023',
+            description: 'Full-featured online shopping platform with responsive design and secure payment processing.',
+            features: [
+                'Responsive user interface',
+                'Shopping cart and checkout system',
+                'User authentication and admin panel',
+                'Product management system'
+            ],
+            tech: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL']
+        },
+        {
+            title: 'Online Banking System',
+            period: '2022',
+            description: 'Secure banking interface allowing users to manage accounts, view transactions, and transfer funds.',
+            features: [
+                'Account balance and transaction history',
+                'Secure authentication system',
+                'Fund transfer capabilities',
+                'Real-time transaction tracking'
+            ],
+            tech: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript']
+        }
+    ]
+}">
+
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300" :class="scrolled ? 'bg-white shadow-lg' : 'bg-transparent'">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold" :class="scrolled ? 'text-gray-800' : 'text-white'">
-                    Uday Shrestha
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">Uday Shrestha</h1>
                 </div>
+                
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Home</a>
-                    <a href="#about" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">About</a>
-                    <a href="#experience" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Experience</a>
-                    <a href="#projects" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Projects</a>
-                    <a href="#contact" class="nav-link" :class="scrolled ? 'text-gray-600 hover:text-blue-600' : 'text-white hover:text-blue-200'">Contact</a>
+                    <a href="#home" @click="activeSection = 'home'" 
+                       :class="activeSection === 'home' ? 'text-primary border-b-2 border-primary' : 'text-gray-600 hover:text-primary'"
+                       class="py-2 transition-colors">Home</a>
+                    <a href="#about" @click="activeSection = 'about'" 
+                       :class="activeSection === 'about' ? 'text-primary border-b-2 border-primary' : 'text-gray-600 hover:text-primary'"
+                       class="py-2 transition-colors">About</a>
+                    <a href="#experience" @click="activeSection = 'experience'" 
+                       :class="activeSection === 'experience' ? 'text-primary border-b-2 border-primary' : 'text-gray-600 hover:text-primary'"
+                       class="py-2 transition-colors">Experience</a>
+                    <a href="#projects" @click="activeSection = 'projects'" 
+                       :class="activeSection === 'projects' ? 'text-primary border-b-2 border-primary' : 'text-gray-600 hover:text-primary'"
+                       class="py-2 transition-colors">Projects</a>
+                    <a href="#contact" @click="activeSection = 'contact'" 
+                       :class="activeSection === 'contact' ? 'text-primary border-b-2 border-primary' : 'text-gray-600 hover:text-primary'"
+                       class="py-2 transition-colors">Contact</a>
                 </div>
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden" :class="scrolled ? 'text-gray-800' : 'text-white'">
-                    <i class="fas fa-bars text-xl"></i>
+
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
                 </button>
             </div>
-        </div>
-        <!-- Mobile Menu -->
-        <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white shadow-lg">
-            <div class="px-6 py-4 space-y-4">
-                <a href="#home" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Home</a>
-                <a href="#about" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">About</a>
-                <a href="#experience" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Experience</a>
-                <a href="#projects" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Projects</a>
-                <a href="#contact" @click="mobileMenuOpen = false" class="block text-gray-600 hover:text-blue-600">Contact</a>
+
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden pb-4">
+                <a href="#home" @click="activeSection = 'home'; mobileMenuOpen = false" class="block py-2 text-gray-600 hover:text-primary">Home</a>
+                <a href="#about" @click="activeSection = 'about'; mobileMenuOpen = false" class="block py-2 text-gray-600 hover:text-primary">About</a>
+                <a href="#experience" @click="activeSection = 'experience'; mobileMenuOpen = false" class="block py-2 text-gray-600 hover:text-primary">Experience</a>
+                <a href="#projects" @click="activeSection = 'projects'; mobileMenuOpen = false" class="block py-2 text-gray-600 hover:text-primary">Projects</a>
+                <a href="#contact" @click="activeSection = 'contact'; mobileMenuOpen = false" class="block py-2 text-gray-600 hover:text-primary">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="min-h-screen gradient-bg flex items-center justify-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-black opacity-20"></div>
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-8" x-show="true" x-transition.delay.200ms>
-                    <img src="https://via.placeholder.com/200x200/4f46e5/ffffff?text=US" alt="Uday Shrestha" class="w-32 h-32 rounded-full mx-auto mb-8 border-4 border-white shadow-xl">
-                </div>
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6" x-show="true" x-transition.delay.400ms>
+    <section id="home" class="pt-20 min-h-screen flex items-center gradient-bg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <div x-data="{ visible: false }" x-init="setTimeout(() => visible = true, 100)">
+                <h1 x-show="visible" x-transition.duration.1000ms class="text-5xl md:text-7xl font-bold mb-6">
                     Uday Shrestha
                 </h1>
-                <p class="text-xl md:text-2xl text-blue-100 mb-8" x-show="true" x-transition.delay.600ms>
-                    Web Developer | Laravel Specialist | Problem Solver
+                <p x-show="visible" x-transition.delay.300ms.duration.1000ms class="text-xl md:text-2xl mb-8 opacity-90">
+                    Full Stack Web Developer
                 </p>
-                <p class="text-lg text-blue-50 mb-12 max-w-2xl mx-auto" x-show="true" x-transition.delay.800ms>
-                    Passionate computer science graduate with expertise in Laravel, PHP, and full-stack development. 
-                    Currently working as a Junior Developer at DryIce Solutions, building robust financial management systems.
+                <p x-show="visible" x-transition.delay.600ms.duration.1000ms class="text-lg mb-12 max-w-2xl mx-auto opacity-80">
+                    Passionate computer science graduate with expertise in Laravel, PHP, and modern web technologies. 
+                    Building innovative solutions for financial and HR management systems.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center" x-show="true" x-transition.delay.1000ms>
-                    <button @click="downloadCV()" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        <i class="fas fa-download mr-2"></i>Download CV
-                    </button>
-                    <a href="#contact" class="glass-effect text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105">
+                <div x-show="visible" x-transition.delay.900ms.duration.1000ms class="space-x-4">
+                    <a href="#projects" @click="activeSection = 'projects'" 
+                       class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                        View My Work
+                    </a>
+                    <a href="#contact" @click="activeSection = 'contact'" 
+                       class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition-colors">
                         Get In Touch
                     </a>
                 </div>
             </div>
         </div>
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
-            <i class="fas fa-chevron-down text-2xl"></i>
-        </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">About Me</h2>
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Profile</h3>
-                        <p class="text-gray-600 leading-relaxed mb-6">
-                            A passionate and inquisitive computer science graduate, full of energy and a strong desire for continuous learning. 
-                            Equipped with a solid foundation in mathematics, science, and programming logic.
-                        </p>
-                        <p class="text-gray-600 leading-relaxed mb-8">
-                            Eager to apply and enhance skills in teamwork, effective communication, and innovative problem-solving. 
-                            A quick learner with a growth mindset, always striving to improve and broaden technical and professional abilities.
-                        </p>
-                        <div class="flex items-center space-x-4 text-gray-600">
-                            <div class="flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>
-                                <span>Bhaktapur, Nepal</span>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">About Me</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">Profile</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        A passionate and inquisitive computer science graduate, full of energy and a strong desire for continuous learning. 
+                        Equipped with a solid foundation in mathematics, science, and programming logic.
+                    </p>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Eager to apply and enhance skills in teamwork, effective communication, and innovative problem-solving. 
+                        A quick learner with a growth mindset, always striving to improve and broaden technical and professional abilities.
+                    </p>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-xl font-semibold mb-4 text-gray-800">Education</h4>
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-primary pl-4">
+                                <h5 class="font-semibold text-gray-800">Bachelor of Science in Computer Science and Information Technology</h5>
+                                <p class="text-gray-600">Samriddhi College, Lokanthali (Tribhuvan University)</p>
+                                <p class="text-sm text-gray-500">2019 – 2023 | Percentage: 78.48%</p>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-flag mr-2 text-blue-600"></i>
-                                <span>Nepalese</span>
+                            <div class="border-l-4 border-gray-300 pl-4">
+                                <h5 class="font-semibold text-gray-800">+2 Science</h5>
+                                <p class="text-gray-600">DAV College, Jawalakhel (NEB)</p>
+                                <p class="text-sm text-gray-500">2016 – 2019 | CGPA: 3.39</p>
                             </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Skills</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <template x-for="skill in skills" :key="skill.name">
-                                <div class="bg-gray-50 p-4 rounded-lg">
-                                    <div class="flex items-center mb-2">
-                                        <i :class="skill.icon" class="text-blue-600 mr-2"></i>
-                                        <span class="font-medium" x-text="skill.name"></span>
-                                    </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-blue-600 h-2 rounded-full transition-all duration-1000" :style="`width: ${skill.level}%`"></div>
-                                    </div>
-                                </div>
-                            </template>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Education Section -->
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Education</h2>
-                <div class="space-y-8">
-                    <template x-for="edu in education" :key="edu.degree">
-                        <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                                <div>
-                                    <h3 class="text-xl font-semibold text-gray-800" x-text="edu.degree"></h3>
-                                    <p class="text-blue-600 font-medium" x-text="edu.institution"></p>
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">Skills</h3>
+                    <div class="space-y-4">
+                        <template x-for="skill in skills" :key="skill.name">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-700" x-text="skill.name"></span>
+                                    <span class="text-sm font-medium text-gray-500" x-text="skill.level + '%'"></span>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-gray-600" x-text="edu.period"></p>
-                                    <p class="text-gray-800 font-semibold" x-text="edu.grade"></p>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full transition-all duration-1000 ease-out" 
+                                         :style="`width: ${skill.level}%`"
+                                         x-data="{ animated: false }" 
+                                         x-init="setTimeout(() => animated = true, 500)"></div>
                                 </div>
                             </div>
-                            <p class="text-gray-600" x-text="edu.location"></p>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Experience Section -->
-    <section id="experience" class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Professional Experience</h2>
-                <div class="space-y-8">
-                    <template x-for="exp in experience" :key="exp.position">
-                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-300">
-                            <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                                <div class="flex-1">
-                                    <h3 class="text-xl font-semibold text-gray-800" x-text="exp.position"></h3>
-                                    <p class="text-blue-600 font-medium text-lg" x-text="exp.company"></p>
-                                    <p class="text-gray-600" x-text="exp.location"></p>
-                                </div>
-                                <div class="text-right mt-2 md:mt-0">
-                                    <p class="text-gray-600 font-medium" x-text="exp.period"></p>
-                                </div>
-                            </div>
-                            <ul class="list-disc list-inside space-y-2 text-gray-700">
-                                <template x-for="responsibility in exp.responsibilities">
-                                    <li x-text="responsibility"></li>
-                                </template>
-                            </ul>
+    <section id="experience" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Professional Experience</h2>
+            
+            <div class="space-y-8">
+                <!-- Junior Developer -->
+                <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Junior Developer</h3>
+                            <p class="text-primary font-semibold">DryIce Solutions Pvt. Ltd.</p>
+                            <p class="text-gray-600">Lalitpur</p>
                         </div>
-                    </template>
+                        <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium mt-2 md:mt-0">
+                            07/2025 – Present
+                        </span>
+                    </div>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Developed modules for budget planning, allocation, and expense tracking, ensuring accurate financial data management across multiple departments.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Optimized complex SQL queries and used Eloquent relationships to handle large datasets and generate dynamic financial reports per office and fiscal year.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Ensured data integrity and security through proper validation, role-based permissions, and middleware implementation in a banking environment.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Trainee -->
+                <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Trainee</h3>
+                            <p class="text-primary font-semibold">DryIce Solutions Pvt. Ltd.</p>
+                            <p class="text-gray-600">Lalitpur</p>
+                        </div>
+                        <span class="bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-medium mt-2 md:mt-0">
+                            09/2024 – 07/2025
+                        </span>
+                    </div>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Understood the core structure of an HRM system, including modules like employee management, leave tracking, and attendance records.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Implemented CRUD operations, data validation, and role-based access control using Laravel and Eloquent ORM.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Collaborated with the team using Git and GitLab for version control and followed best practices in modular coding, database design, and task tracking.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Internship -->
+                <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Internship</h3>
+                            <p class="text-primary font-semibold">DryIce Solutions Pvt. Ltd.</p>
+                            <p class="text-gray-600">Lalitpur</p>
+                        </div>
+                        <span class="bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-medium mt-2 md:mt-0">
+                            05/2024 – 08/2024
+                        </span>
+                    </div>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Gained practical understanding of Laravel's MVC architecture, including route management, controller logic, and view rendering.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Worked with Eloquent ORM to perform database operations and define relationships such as hasMany, belongsTo, and hasOne.
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            Developed dynamic user interfaces using Blade templating engine, and implemented form handling with validation and session-based feedback.
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Projects</h2>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <template x-for="project in projects" :key="project.title">
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="p-6">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h3 class="text-xl font-semibold text-gray-800" x-text="project.title"></h3>
-                                    <span class="text-sm text-gray-500" x-text="project.period"></span>
-                                </div>
-                                <ul class="list-disc list-inside space-y-2 text-gray-600 text-sm">
-                                    <template x-for="feature in project.features">
-                                        <li x-text="feature"></li>
+    <section id="projects" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Featured Projects</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <template x-for="project in projects" :key="project.title">
+                    <div class="bg-gray-50 rounded-lg shadow-lg overflow-hidden card-hover">
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-gray-800" x-text="project.title"></h3>
+                                <span class="text-sm text-gray-500 bg-gray-200 px-3 py-1 rounded-full" x-text="project.period"></span>
+                            </div>
+                            <p class="text-gray-600 mb-6" x-text="project.description"></p>
+                            
+                            <div class="mb-6">
+                                <h4 class="font-semibold text-gray-800 mb-3">Key Features:</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <template x-for="feature in project.features" :key="feature">
+                                        <li class="flex items-start">
+                                            <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                                            <span x-text="feature"></span>
+                                        </li>
                                     </template>
                                 </ul>
-                                <div class="mt-4 flex flex-wrap gap-2">
-                                    <template x-for="tech in project.technologies">
-                                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full" x-text="tech"></span>
-                                    </template>
-                                </div>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="tech in project.tech" :key="tech">
+                                    <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-medium" x-text="tech"></span>
+                                </template>
                             </div>
                         </div>
-                    </template>
-                </div>
+                    </div>
+                </template>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Get In Touch</h2>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Contact Information</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-envelope text-blue-600 mr-4 w-5"></i>
-                                <span class="text-gray-600">udshrestha48@gmail.com</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-phone text-blue-600 mr-4 w-5"></i>
-                                <span class="text-gray-600">(+977) 984-752-7022</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-map-marker-alt text-blue-600 mr-4 w-5"></i>
-                                <span class="text-gray-600">Lokanthali-1, Bhaktapur, Bagmati Province, Nepal</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fab fa-linkedin text-blue-600 mr-4 w-5"></i>
-                                <a href="https://www.linkedin.com/in/uday-shrestha" target="_blank" class="text-blue-600 hover:text-blue-800">LinkedIn Profile</a>
-                            </div>
-                        </div>
+    <section id="contact" class="py-20 gradient-bg text-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-16">Get In Touch</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="glass-effect rounded-lg p-8">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-6 text-gray-800">Send Message</h3>
-                        <form @submit.prevent="sendMessage" class="space-y-6">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Name</label>
-                                <input type="text" x-model="form.name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Email</label>
-                                <input type="email" x-model="form.email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Subject</label>
-                                <input type="text" x-model="form.subject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Message</label>
-                                <textarea x-model="form.message" required rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                            </div>
-                            <button type="submit" :disabled="sending" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50">
-                                <span x-show="!sending">Send Message</span>
-                                <span x-show="sending">Sending...</span>
-                            </button>
-                        </form>
-                        <div x-show="messageStatus" x-transition class="mt-4 p-4 rounded-lg" :class="messageStatus === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                            <p x-text="messageText"></p>
-                        </div>
-                    </div>
+                    <h3 class="text-xl font-bold mb-2">Email</h3>
+                    <a href="mailto:udshrestha48@gmail.com" class="text-white hover:text-gray-200 transition-colors">
+                        udshrestha48@gmail.com
+                    </a>
                 </div>
+                
+                <div class="glass-effect rounded-lg p-8">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Phone</h3>
+                    <a href="tel:+977-984-752-7022" class="text-white hover:text-gray-200 transition-colors">
+                        (+977) 984-752-7022
+                    </a>
+                </div>
+                
+                <div class="glass-effect rounded-lg p-8">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Location</h3>
+                    <p class="text-white">Lokanthali-1, Bhaktapur<br>Bagmati Province, Nepal</p>
+                </div>
+            </div>
+            
+            <div class="flex justify-center">
+                <a href="https://www.linkedin.com/in/uday-shrestha" target="_blank" 
+                   class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Connect on LinkedIn
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-6 text-center">
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p>&copy; 2025 Uday Shrestha. All rights reserved.</p>
-            <p class="mt-2 text-gray-400">Built with Alpine.js and Tailwind CSS</p>
         </div>
     </footer>
 
     <script>
-        function portfolio() {
-            return {
-                scrolled: false,
-                mobileMenuOpen: false,
-                sending: false,
-                messageStatus: '',
-                messageText: '',
-                form: {
-                    name: '',
-                    email: '',
-                    subject: '',
-                    message: ''
-                },
-                skills: [
-                    { name: 'PHP/Laravel', level: 90, icon: 'fab fa-php' },
-                    { name: 'JavaScript', level: 85, icon: 'fab fa-js' },
-                    { name: 'HTML/CSS', level: 90, icon: 'fab fa-html5' },
-                    { name: 'MySQL', level: 85, icon: 'fas fa-database' },
-                    { name: 'Python', level: 75, icon: 'fab fa-python' },
-                    { name: 'C/C++', level: 80, icon: 'fas fa-code' },
-                    { name: 'Linux', level: 70, icon: 'fab fa-linux' },
-                    { name: 'Git/GitLab', level: 85, icon: 'fab fa-git-alt' }
-                ],
-                education: [
-                    {
-                        degree: 'Bachelor of Science in Computer Science and Information Technology',
-                        institution: 'Samriddhi College, Lokanthali (Tribhuvan University)',
-                        period: '2019 – 2023',
-                        grade: 'Percentage: 78.48%',
-                        location: 'Bhaktapur'
-                    },
-                    {
-                        degree: '+2 Science',
-                        institution: 'DAV College, Jawalakhel (NEB)',
-                        period: '2016 – 2019',
-                        grade: 'CGPA: 3.39',
-                        location: 'Lalitpur'
-                    },
-                    {
-                        degree: 'SLC (Grade 10)',
-                        institution: 'Gaurishankar English Boarding School',
-                        period: '2016',
-                        grade: 'CGPA: 3.60',
-                        location: 'Sandhikharka'
-                    }
-                ],
-                experience: [
-                    {
-                        position: 'Junior Developer',
-                        company: 'DryIce Solutions Pvt. Ltd.',
-                        location: 'Lalitpur',
-                        period: '07/2025 – Present',
-                        responsibilities: [
-                            'Developed modules for budget planning, allocation, and expense tracking, ensuring accurate financial data management across multiple departments.',
-                            'Optimized complex SQL queries and used Eloquent relationships to handle large datasets and generate dynamic financial reports per office and fiscal year.',
-                            'Ensured data integrity and security through proper validation, role-based permissions, and middleware implementation in a banking environment.'
-                        ]
-                    },
-                    {
-                        position: 'Trainee',
-                        company: 'DryIce Solutions Pvt. Ltd.',
-                        location: 'Lalitpur',
-                        period: '09/2024 – 07/2025',
-                        responsibilities: [
-                            'Understood the core structure of an HRM system, including modules like employee management, leave tracking, and attendance records.',
-                            'Implemented CRUD operations, data validation, and role-based access control using Laravel and Eloquent ORM.',
-                            'Collaborated with the team using Git and GitLab for version control and followed best practices in modular coding, database design, and task tracking.'
-                        ]
-                    },
-                    {
-                        position: 'Internship',
-                        company: 'DryIce Solutions Pvt. Ltd.',
-                        location: 'Lalitpur',
-                        period: '05/2024 – 08/2024',
-                        responsibilities: [
-                            'Gained practical understanding of Laravel\'s MVC architecture, including route management, controller logic, and view rendering.',
-                            'Worked with Eloquent ORM to perform database operations and define relationships such as hasMany, belongsTo, and hasOne.',
-                            'Developed dynamic user interfaces using Blade templating engine, and implemented form handling with validation and session-based feedback.'
-                        ]
-                    }
-                ],
-                projects: [
-                    {
-                        title: 'Budget and Expense Management System (BEMS)',
-                        period: '09/2024 – Present',
-                        features: [
-                            'Provides a secure, compliant, and feature-rich platform for managing the bank\'s finances systematically and scientifically.',
-                            'Supports ongoing updates and adapts to emerging regulations and the bank\'s internal standards.',
-                            'Enables comprehensive budgeting, forecasting, analysis, and financial reporting.',
-                            'Integrates data from multiple existing databases and applications for improved transparency.',
-                            'Offers self-service access to budget owners, enhancing user autonomy.'
-                        ],
-                        technologies: ['Laravel', 'MySQL', 'PHP', 'JavaScript', 'Bootstrap']
-                    },
-                    {
-                        title: 'Human Resource Management System (HRMS)',
-                        period: '05/2024 – 09/2024',
-                        features: [
-                            'Centralizes employee information, including personal details, job roles, and employment history.',
-                            'Manages attendance, leave, and shift scheduling efficiently.',
-                            'Facilitates performance tracking, appraisals, and goal setting.',
-                            'Supports recruitment processes, from job posting to candidate onboarding.',
-                            'Provides role-based access control for secure data handling.'
-                        ],
-                        technologies: ['Laravel', 'MySQL', 'PHP', 'JavaScript', 'Bootstrap']
-                    },
-                    {
-                        title: 'E-Commerce Platform',
-                        period: '2023',
-                        features: [
-                            'Designed a responsive user interface with HTML, CSS, and JavaScript for product browsing and shopping.',
-                            'Implemented a shopping cart and checkout system with session handling in PHP.',
-                            'Developed user authentication and an admin panel for managing products and orders.',
-                            'Integrated a MySQL database for dynamic product display and secure data storage.'
-                        ],
-                        technologies: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript']
-                    },
-                    {
-                        title: 'Sample Online Banking System',
-                        period: '2022',
-                        features: [
-                            'Designed a secure user interface for account holders to view balances, transaction history, and profile details.',
-                            'Implemented user authentication and session management using PHP for secure login/logout functionality.',
-                            'Developed features for fund transfers, account statements, and transaction tracking.',
-                            'Used MySQL for storing user data, transactions, and account details, ensuring real-time data access.'
-                        ],
-                        technologies: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript']
-                    }
-                ],
-
-                init() {
-                    window.addEventListener('scroll', () => {
-                        this.scrolled = window.scrollY > 50;
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
+                }
+            });
+        });
 
-                    // Smooth scrolling for anchor links
-                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                        anchor.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                                behavior: 'smooth'
-                            });
-                        });
-                    });
-                },
+        // Update active section based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = ['home', 'about', 'experience', 'projects', 'contact'];
+            const scrollPosition = window.scrollY + 100;
 
-                downloadCV() {
-                    // Create a simple text version of the CV for download
-                    const cvContent = `UDAY SHRESTHA
-Web Developer
-
-Contact Information:
-Email: udshrestha48@gmail.com
-Phone: (+977) 984-752-7022
-Address: Lokanthali-1, Bhaktapur, Bagmati Province, Nepal
-LinkedIn: www.linkedin.com/in/uday-shrestha
-Nationality: Nepalese
-
-PROFILE:
-A passionate and inquisitive computer science graduate, full of energy and a strong desire for continuous learning. Equipped with a solid foundation in mathematics, science, and programming logic. Eager to apply and enhance skills in teamwork, effective communication, and innovative problem-solving. A quick learner with a growth mindset, always striving to improve and broaden technical and professional abilities.
-
-EDUCATION:
-2019 – 2023: Bachelor of Science in Computer Science and Information Technology
-Samriddhi College, Lokanthali (Tribhuvan University) - Bhaktapur
-Percentage: 78.48%
-
-2016 – 2019: +2 Science
-DAV College, Jawalakhel (NEB) - Lalitpur
-CGPA: 3.39
-
-2016: SLC (Grade 10)
-Gaurishankar English Boarding School - Sandhikharka
-CGPA: 3.60
-
-PROFESSIONAL EXPERIENCE:
-07/2025 – Present: Junior Developer
-DryIce Solutions Pvt. Ltd. - Lalitpur
-• Developed modules for budget planning, allocation, and expense tracking
-• Optimized complex SQL queries and used Eloquent relationships
-• Ensured data integrity and security through proper validation
-
-09/2024 – 07/2025: Trainee
-DryIce Solutions Pvt. Ltd. - Lalitpur
-• Understood HRM system core structure
-• Implemented CRUD operations and role-based access control
-• Collaborated using Git and GitLab for version control
-
-05/2024 – 08/2024: Internship
-DryIce Solutions Pvt. Ltd. - Lalitpur
-• Gained practical understanding of Laravel's MVC architecture
-• Worked with Eloquent ORM for database operations
-• Developed dynamic user interfaces using Blade templating
-
-SKILLS:
-Programming Languages: C/C++, Python, PHP, JavaScript, HTML/CSS
-Frameworks: Laravel
-Databases: MySQL, PostgreSQL
-Operating Systems: Linux
-Version Control: Git, GitLab
-Other: Networking
-
-PROJECTS:
-1. Budget and Expense Management System (BEMS) - 09/2024 – Present
-2. Human Resource Management System (HRMS) - 05/2024 – 09/2024
-3. E-Commerce Platform - 2023
-4. Sample Online Banking System - 2022`;
-
-                    const blob = new Blob([cvContent], { type: 'text/plain' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'Uday_Shrestha_CV.txt';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                },
-
-                sendMessage() {
-                    this.sending = true;
-                    this.messageStatus = '';
+            sections.forEach(section => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const offsetTop = element.offsetTop;
+                    const offsetHeight = element.offsetHeight;
                     
-                    // Simulate form submission (replace with actual email service)
-                    setTimeout(() => {
-                        // Create mailto link as fallback
-                        const subject = encodeURIComponent(this.form.subject);
-                        const body = encodeURIComponent(`Name: ${this.form.name}\nEmail: ${this.form.email}\n\nMessage:\n${this.form.message}`);
-                        const mailtoLink = `mailto:udshrestha48@gmail.com?subject=${subject}&body=${body}`;
-                        
-                        try {
-                            window.location.href = mailtoLink;
-                            this.messageStatus = 'success';
-                            this.messageText = 'Your default email client should open with the message. If not, please copy the information and send manually to udshrestha48@gmail.com';
-                            
-                            // Reset form
-                            this.form = {
-                                name: '',
-                                email:
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        // Update activeSection in Alpine.js
+                        const app = document.querySelector('[x-data]');
+                        if (app && app._x_dataStack) {
+                            app._x_dataStack[0].activeSection = section;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
